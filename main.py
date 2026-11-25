@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
-"""Write the entry text to entry.txt.
+"""Write the no-deadline-met excuse entry to entry.txt.
 
-Entry for make.fun's "One Line, No Deadline Met": A cornered person's excuse with a self-defeating turn: it was finished on time, then three days went on rewriting the first line so it would not look rushed - the punch lands in the final words.
+Judging fit: the competition asks for one line from someone who
+missed a deadline, so the line has to sound like a real, cornered
+excuse rather than a joke about deadlines in general. This entry is
+self-defeating in a believable way: the work was finished on time,
+then three days went into rewriting its first line so it would not
+look rushed. The punch lands in the final words, because the effort
+to hide haste is exactly what caused the delay being apologised for.
 Deterministic: a fixed text, no network, no randomness, no clock.
 """
 import os
@@ -23,6 +29,14 @@ def validate(text: str) -> None:
         raise ValueError("wrong line count")
     if "\r" in body:
         raise ValueError("no carriage returns")
+    if body != body.strip():
+        raise ValueError("no leading or trailing whitespace")
+    if not body.endswith("."):
+        raise ValueError("entry should end with a full stop")
+    if "  " in body:
+        raise ValueError("no double spaces")
+    if any(not ch.isprintable() for ch in body):
+        raise ValueError("entry must be printable text only")
 
 
 def main() -> None:
